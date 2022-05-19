@@ -1,22 +1,25 @@
 /** @format */
 import { GetStaticProps } from 'next';
+import { FC } from 'react';
 
 import { pokeApi } from '../api';
 import { Layout } from '../components/layouts';
-import { PokemonListResponse } from '../interfaces';
+import { PokemonListResponse, SmallPokemon } from '../interfaces';
 
-import type { NextPage } from 'next';
-const HomePage: NextPage = (props) => {
-	console.log(props);
+interface Props {
+	pokemons: SmallPokemon[];
+}
+
+const HomePage: FC<Props> = ({ pokemons }) => {
+	console.log(pokemons);
 
 	return (
 		<Layout title='Listado de Pokémons'>
 			<ul>
-				<li>Pokémon</li>
-				<li>Pokémon</li>
-				<li>Pokémon</li>
-				<li>Pokémon</li>
-				<li>Pokémon</li>
+				{/* Forma de recorrer arrays en React */}
+				{pokemons.map(({ id, name }) => (
+					<li key={id}>{name}</li>
+				))}
 			</ul>
 		</Layout>
 	);
