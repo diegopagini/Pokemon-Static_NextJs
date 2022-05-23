@@ -1,9 +1,12 @@
 /** @format */
+import { Grid } from '@nextui-org/react';
 import { GetStaticProps } from 'next';
 import { FC } from 'react';
 
 import { pokeApi } from '../api';
 import { Layout } from '../components/layouts';
+import { Pokemon } from '../components/pokemon/Pokemon';
+import { environment } from '../environment/environment';
 import { PokemonListResponse, SmallPokemon } from '../interfaces';
 
 interface Props {
@@ -11,16 +14,14 @@ interface Props {
 }
 
 const HomePage: FC<Props> = ({ pokemons }) => {
-	console.log(pokemons);
-
 	return (
 		<Layout title='Listado de Pokémons'>
-			<ul>
+			<Grid.Container gap={2} justify='flex-start'>
 				{/* Forma de recorrer arrays en React */}
-				{pokemons.map(({ id, name }) => (
-					<li key={id}>{name}</li>
+				{pokemons.map(({ id, name, img }) => (
+					<Pokemon key={id} name={name} img={img} id={id} />
 				))}
-			</ul>
+			</Grid.Container>
 		</Layout>
 	);
 };
@@ -35,7 +36,11 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 	const { results } = await pokeApi<PokemonListResponse>('/pokemon?limit=151');
 	return {
 		props: {
-			pokemons: results,
+			pokemons: results.map((pokemon: SmallPokemon, index: number) => ({
+				...pokemon,
+				img: `${environment.baseImg}${index + 1}.svg`,
+				id: index + 1,
+			})),
 		},
 	};
 };
