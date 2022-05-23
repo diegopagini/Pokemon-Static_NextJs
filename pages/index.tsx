@@ -5,7 +5,7 @@ import { FC } from 'react';
 
 import { pokeApi } from '../api';
 import { Layout } from '../components/layouts';
-import { Pokemon } from '../components/pokemon/Pokemon';
+import { Pokemon } from '../components/pokemon';
 import { environment } from '../environment/environment';
 import { PokemonListResponse, SmallPokemon } from '../interfaces';
 
