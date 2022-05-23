@@ -1,24 +1,19 @@
 /** @format */
-import { GetStaticPaths, GetStaticProps } from 'next';
-import { useRouter } from 'next/router';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { FC } from 'react';
 
+import pokeFull from '../../api/pokeFull';
 import { Layout } from '../../components/layouts';
+import { Pokemon } from '../../interfaces';
 
 interface Props {
-	id: string;
-	name: string;
+	pokemon: any;
 }
 
-export const PokemonPage: FC<Props> = ({ id, name }) => {
-	const { query } = useRouter();
-	console.log(query);
-
+export const PokemonPage: NextPage<Props> = ({ pokemon }) => {
 	return (
-		<Layout title={name}>
-			<h1>
-				{id} - {name}
-			</h1>
+		<Layout title='asd'>
+			<h1>Temporal</h1>
 		</Layout>
 	);
 };
@@ -26,24 +21,28 @@ export const PokemonPage: FC<Props> = ({ id, name }) => {
 // You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routes
 // Mis rutas son dinámicas por el [id]
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
+	const pokemons151 = [...Array(151)].map((value, index) => `${index + 1}`);
+
 	return {
-		paths: [
-			{
-				params: { id: '1' },
-			},
-			{
-				params: { id: '2' },
-			},
-		],
-		fallback: false, // Si el url no existiera nos envía al 404.
+		paths: pokemons151.map((id: string) => ({
+			params: { id },
+		})),
+		fallback: false, // Si el url no existiera nos envía al 404 con el fallback en false.
 	};
 };
 
-export const getStaticProps: GetStaticProps = async (ctx) => {
+/**
+ * Función para obtener información dinámica de cada pokemon.
+ */
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+	const { id } = params as { id: string };
+	const data = await pokeFull<Pokemon>(`/pokemon/${id}`);
+
+	console.log(data);
+
 	return {
 		props: {
-			id: 1,
-			name: 'Bul',
+			data,
 		},
 	};
 };
