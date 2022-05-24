@@ -132,7 +132,7 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 		})),
 		fallback: false, // Si el url no existiera nos envía al 404 con el fallback en false.
 	};
-};
+}; // getStaticPaths siempre necesita getStaticProps
 
 /**
  * Función para obtener información dinámica de cada pokemon.
@@ -144,6 +144,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 		props: {
 			pokemon: await getPokemonInfo(id),
 		},
+		revalidate: 86400, // en segundos, "revalidate" es el tiempo que se configura para que vuelva a validar la página.
 	};
 };
 
