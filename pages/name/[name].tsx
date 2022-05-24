@@ -58,7 +58,7 @@ const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
 							<Card.Image
 								src={
 									pokemon.sprites.other?.dream_world.front_default ||
-									'/no-image.png'
+									'/imgs/banner.png'
 								}
 								alt={pokemon.name}
 								width='100%'
