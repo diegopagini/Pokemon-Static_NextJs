@@ -4,16 +4,17 @@ import confetti from 'canvas-confetti';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
+import { pokeApi } from '../../api';
 import pokeFull from '../../api/pokeFull';
 import { Layout } from '../../components/layouts';
-import { Pokemon } from '../../interfaces';
+import { Pokemon, PokemonListResponse } from '../../interfaces';
 import { localFavorites } from '../../utils';
 
 interface Props {
 	pokemon: Pokemon;
 }
 
-const PokemonPage: NextPage<Props> = ({ pokemon }) => {
+const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
 	/**
 	 * useState para comprobar si el id de nuestro pokemon esta o no en el localStorage.
 	 * para vovler a renderizar el componente es necesario llamar al setter del useState con su nuevo valor.
@@ -123,24 +124,26 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
 };
 
 // You should use getStaticPaths if you’re statically pre-rendering pages that use dynamic routes
-// Mis rutas son dinámicas por el [id]
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-	const pokemons151 = [...Array(151)].map((value, index) => `${index + 1}`);
+	const { results } = await pokeApi<PokemonListResponse>('/pokemon?limit=151');
+	const pokemonNames: string[] = results.map((pokemon) => pokemon.name);
 
 	return {
-		paths: pokemons151.map((id: string) => ({
-			params: { id },
+		paths: pokemonNames.map((name: string) => ({
+			params: { name },
 		})),
 		fallback: false, // Si el url no existiera nos envía al 404 con el fallback en false.
 	};
 };
 
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
 /**
  * Función para obtener información dinámica de cada pokemon.
  */
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-	const { id } = params as { id: string };
-	const pokemon = await pokeFull<Pokemon>(`/pokemon/${id}`);
+	const { name } = params as { name: string };
+	const pokemon = await pokeFull<Pokemon>(`/pokemon/${name}`);
 
 	return {
 		props: {
@@ -149,4 +152,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 	};
 };
 
-export default PokemonPage;
+export default PokemonByNamePage;
