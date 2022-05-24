@@ -5,10 +5,9 @@ import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
 import { pokeApi } from '../../api';
-import pokeFull from '../../api/pokeFull';
 import { Layout } from '../../components/layouts';
 import { Pokemon, PokemonListResponse } from '../../interfaces';
-import { localFavorites } from '../../utils';
+import { getPokemonInfo, localFavorites } from '../../utils';
 
 interface Props {
 	pokemon: Pokemon;
@@ -143,11 +142,10 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
  */
 export const getStaticProps: GetStaticProps = async ({ params }) => {
 	const { name } = params as { name: string };
-	const pokemon = await pokeFull<Pokemon>(`/pokemon/${name}`);
 
 	return {
 		props: {
-			pokemon,
+			pokemon: await getPokemonInfo(name),
 		},
 	};
 };

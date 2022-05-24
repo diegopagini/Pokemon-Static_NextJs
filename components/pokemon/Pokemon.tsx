@@ -15,7 +15,7 @@ export const Pokemon: FC<Props> = ({ name, img, id }) => {
 
 	const onClick = () => {
 		// Función para navegar en React.
-		router.push(`/pokemon/${id}`);
+		router.push(`/name/${name}`);
 	};
 
 	return (
