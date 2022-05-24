@@ -1,7 +1,6 @@
 /** @format */
 import { Button, Card, Container, Grid, Image, Text } from '@nextui-org/react';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
-import { FC } from 'react';
 
 import pokeFull from '../../api/pokeFull';
 import { Layout } from '../../components/layouts';
@@ -11,7 +10,7 @@ interface Props {
 	pokemon: Pokemon;
 }
 
-export const PokemonPage: NextPage<Props> = ({ pokemon }) => {
+const PokemonPage: NextPage<Props> = ({ pokemon }) => {
 	console.log(pokemon);
 
 	return (
